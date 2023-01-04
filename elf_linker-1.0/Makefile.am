@@ -15,12 +15,14 @@ SUBDIRS+=. Examples_fusion
 
 bin_PROGRAMS=
 bin_PROGRAMS+=Options_and_debug_example
+bin_PROGRAMS+=readelf
 
 
 COMMON=debug.h debug.c util.h util.c
 
 EXTRA_DIST=filtre.pl
 Options_and_debug_example_SOURCES=$(COMMON) Options_and_debug_example.c
+readelf_SOURCES=$(COMMON) readelf.c read_header.c read_header.h
 
 EXTRA_DIST+=
 

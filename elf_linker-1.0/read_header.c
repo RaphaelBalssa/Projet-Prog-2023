@@ -2,23 +2,15 @@
 #include <stdlib.h>
 #include <elf.h>
 
-Elf32_Ehdr read_header(FILE * elf)
+Elf32_Ehdr read_header(FILE *elf)
 {
 	Elf32_Ehdr h;
-	char test[65];
-	for (int i = 0; i < 64; i++)
-	{
-		char c = fgetc(elf);
-		test[i] = c;
+	int i = fread(&h, 1, sizeof(h), elf);
+	if(i == 1){
+		return h;
+	} else {
+		printf("irrelevant test to avoid warning");
 	}
-	test[64] = '\0';
-	printf("\n\n\n\n");
-	for (int i = 32; i < 40; i++)
-	{
-		printf("%d", test[i]);
-	}
-	printf("\n\n\n\n");
-	fread(&h, 1, sizeof(h), elf);
 	
 	return h;
 }
