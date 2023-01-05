@@ -2,16 +2,53 @@
 #include <stdlib.h>
 #include <elf.h>
 
-Elf32_Ehdr read_header(FILE *elf)
+
+//Swaps endianess on a 16-bit value
+uint16_t Swap16(uint16_t value)
+{
+    return (((value & 0x00FF) << 8) |
+            ((value & 0xFF00) >> 8));
+}
+
+//Swaps endianess on a 32-bit value
+uint32_t Swap32(uint32_t value) 
+{
+    return (((value & 0x000000FF) << 24) |
+            ((value & 0x0000FF00) <<  8) |
+            ((value & 0x00FF0000) >>  8) |
+            ((value & 0xFF000000) >> 24));
+}
+
+Elf32_Ehdr read_header(FILE * elf)
 {
 	Elf32_Ehdr h;
-	int i = fread(&h, 1, sizeof(h), elf);
-	if(i == 1){
-		return h;
-	} else {
-		printf("irrelevant test to avoid warning");
-	}
 	
+	/*char test[65];
+	for (int i = 0; i < 64; i++)
+	{
+		char c = fgetc(elf);
+		test[i] = c;
+	}
+	test[64] = '\0';
+	printf("\n\n\n\n %d    %d \n\n\n\n",(int)test[16], (int)test[17] );*/
+	
+	fread(&h, sizeof(h), 1, elf);
+	if (h.e_ident[EI_DATA] == 2)
+	{
+		h.e_type = Swap16(h.e_type);
+		h.e_version = Swap32(h.e_version);
+		h.e_entry = Swap32(h.e_entry);
+		h.e_phoff = Swap32(h.e_phoff);
+		h.e_shoff = Swap32(h.e_shoff);
+		h.e_flags = Swap32(h.e_flags);
+		h.e_ehsize = Swap16(h.e_ehsize);
+		h.e_phentsize = Swap16(h.e_phentsize);
+		h.e_phnum = Swap16(h.e_phnum);
+		h.e_shentsize = Swap16(h.e_shentsize);
+		h.e_shnum = Swap16(h.e_shnum);
+		h.e_shstrndx = Swap16(h.e_shstrndx);
+	}
+	//printf("\n\n\n\n %d \n\n\n\n", h.e_type);
 	return h;
 }
 
@@ -59,7 +96,7 @@ void show_header (Elf32_Ehdr h)
 	//ELF Version
 	if (h.e_ident[EI_VERSION] == 1)
 	{
-		printf("  Version:                           %X\n", h.e_version);
+		printf("  Version:                           1\n");
 	}
 	else
 	{
@@ -72,17 +109,17 @@ void show_header (Elf32_Ehdr h)
     	case 0 :
     		printf("  OS/ABI:                            UNIX - System V\n");
     		break;
- 		case 1 :
+ 	case 1 :
     		printf("  OS/ABI:                            HP-UX\n");
     		break;
-		case 2 :
-			printf("  OS/ABI:                            NetBSD\n");
+	case 2 :
+		printf("  OS/ABI:                            NetBSD\n");
     		break;
-		case 3 :
+	case 3 :
     		printf("  OS/ABI:                            Linux\n");
     		break;
     	case 4:
-		    printf("  OS/ABI:                            GNU Hurd\n");
+		printf("  OS/ABI:                            GNU Hurd\n");
     		break;
     	case 6 :
     		printf("  OS/ABI:                            Sun Solaris\n");
@@ -132,61 +169,79 @@ void show_header (Elf32_Ehdr h)
     	case 255 :
     		printf("  OS/ABI:                            Standalone\n");
     		break;
-    }
+    	}
 
 	//ABI Version
 	printf("  ABI Version:                       %d\n", h.e_ident[EI_ABIVERSION]);
-
+	
 	//File Type
+	//h.e_type = (h.e_type>>8) | (h.e_type<<8);
+	//h.e_type = (h.e_type >> 8);
 	printf("  Type:                              ");
+	//printf("\n\n\n\n %d \n\n\n\n", h.e_type);
 	switch (h.e_type)
 	{
-		case ET_NONE:
-			printf("Unknown\n");
+		case 0:
+			printf("Unknown)\n");
 			break;
-		case ET_REL:
-			printf("REL (Relocatable file\n");
+		case 1:
+			printf("REL (Relocatable file)\n");
 			break;
-		case ET_EXEC:
+		case 2:
 			printf("EXEC (Executable file)\n");
 			break;
-		case ET_DYN:
+		case 3:
 			printf("DYN (Shared Object)\n");
 			break;
-		case ET_CORE:
+		case 4:
 			printf("CORE (Core file)\n");
 			break;
-		case ET_LOOS:
+		case 65024:
 			printf("LOOS (Operating System Specific File)\n");
 			break;
-		case ET_HIOS:
+		case 65279:
 			printf("HIOS (Operating System Specific File)\n");
 			break;
-		case ET_LOPROC:
+		case 65280:
 			printf("LOPROC (PRocessor Specific File)\n");
 			break;
-		case ET_HIPROC:
+		case 65535:
 			printf("HIPROC (Processor Specific File)\n");
 			break;
 	}
 
 	//Target Instruction Set Architecture
-	printf("  Machine:                           Advanced Micro Devices X86-64\n");
+	printf("  Machine:                           ARM\n");
     
 	//e_version
 	printf("  Version:                           0x%X\n", h.e_version);
 
 	//Entry Point Address
-    printf("  Entry point address:               0x%X\n", h.e_entry);
+    	printf("  Entry point address:               0x%X\n", h.e_entry);
 
 	//Start of program headers
-    printf("  Start of program headers:          %X (bytes into file)\n", h.e_phoff);
-    printf("  Start of section headers:          %d (bytes into file)\n", h.e_shoff);
-    printf("  Flags:                             0x%x\n", h.e_flags);
-    printf("  Size of this header:               %d (bytes)\n", h.e_ehsize);
-    printf("  Size of program headers:           %d (bytes)\n", h.e_phentsize);
-    printf("  Number of program headers:         %d\n", h.e_phnum);
-    printf("  Size of section headers:           %d (bytes)\n", h.e_shentsize);
-    printf("  Number of section headers:         %d\n", h.e_shnum);
-    printf("  Section header string table index: %d\n", h.e_shstrndx);
+    	printf("  Start of program headers:          %d (bytes into file)\n", h.e_phoff);
+    	
+    	//Start of section headers
+    	printf("  Start of section headers:          %d (bytes into file)\n", h.e_shoff);
+    	
+    	//Flags
+    	printf("  Flags:                             0x%x\n", h.e_flags);
+    	
+    	//Size of header
+    	printf("  Size of this header:               %d (bytes)\n", h.e_ehsize);
+    	
+    	//Size of program headers
+    	printf("  Size of program headers:           %d (bytes)\n", h.e_phentsize);
+    
+    	//Number of program headers
+    	printf("  Number of program headers:         %d\n", h.e_phnum);
+ 	
+ 	//Size of section headers   
+ 	printf("  Size of section headers:           %d (bytes)\n", h.e_shentsize);
+    
+    	//Number of section headers
+   	printf("  Number of section headers:         %d\n", h.e_shnum);
+    
+    	printf("  Section header string table index: %d\n", h.e_shstrndx);
 }
