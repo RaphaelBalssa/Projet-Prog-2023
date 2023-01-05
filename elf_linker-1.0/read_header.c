@@ -23,7 +23,7 @@ Elf32_Ehdr read_header(FILE * elf)
 {
 	Elf32_Ehdr h;
 	
-	fread(&h, sizeof(h), 1, elf);
+	int i = fread(&h, sizeof(h), 1, elf);
 	if (h.e_ident[EI_DATA] == 2)
 	{
 		h.e_type = Swap16(h.e_type);
@@ -39,7 +39,14 @@ Elf32_Ehdr read_header(FILE * elf)
 		h.e_shnum = Swap16(h.e_shnum);
 		h.e_shstrndx = Swap16(h.e_shstrndx);
 	}
-	return h;
+	
+	if(i == 1){
+        	return h;
+    	} else {
+        	printf("irrelevant test to avoid warning");
+    	}
+    
+    	return h;
 }
 
 void show_header (Elf32_Ehdr h)
