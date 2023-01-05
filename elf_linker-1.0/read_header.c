@@ -23,15 +23,6 @@ Elf32_Ehdr read_header(FILE * elf)
 {
 	Elf32_Ehdr h;
 	
-	/*char test[65];
-	for (int i = 0; i < 64; i++)
-	{
-		char c = fgetc(elf);
-		test[i] = c;
-	}
-	test[64] = '\0';
-	printf("\n\n\n\n %d    %d \n\n\n\n",(int)test[16], (int)test[17] );*/
-	
 	fread(&h, sizeof(h), 1, elf);
 	if (h.e_ident[EI_DATA] == 2)
 	{
@@ -48,7 +39,6 @@ Elf32_Ehdr read_header(FILE * elf)
 		h.e_shnum = Swap16(h.e_shnum);
 		h.e_shstrndx = Swap16(h.e_shstrndx);
 	}
-	//printf("\n\n\n\n %d \n\n\n\n", h.e_type);
 	return h;
 }
 
@@ -175,10 +165,7 @@ void show_header (Elf32_Ehdr h)
 	printf("  ABI Version:                       %d\n", h.e_ident[EI_ABIVERSION]);
 	
 	//File Type
-	//h.e_type = (h.e_type>>8) | (h.e_type<<8);
-	//h.e_type = (h.e_type >> 8);
 	printf("  Type:                              ");
-	//printf("\n\n\n\n %d \n\n\n\n", h.e_type);
 	switch (h.e_type)
 	{
 		case 0:
