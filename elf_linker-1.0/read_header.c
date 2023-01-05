@@ -56,7 +56,7 @@ void show_header (Elf32_Ehdr h)
 	
 	//Magic Number
 	printf("Magic Number: ");
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i <= 14; i++)
 	{
 		printf("%02X ", h.e_ident[i]);
 	}
