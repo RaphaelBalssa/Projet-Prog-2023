@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <elf.h>
 
+#include "util.h"
 
 //Swaps endianess on a 16-bit value
 uint16_t Swap16(uint16_t value)
@@ -24,7 +25,7 @@ Elf32_Ehdr read_header(FILE * elf)
 	Elf32_Ehdr h;
 	
 	int i = fread(&h, sizeof(h), 1, elf);
-	if (h.e_ident[EI_DATA] == 2)
+	if (is_big_endian(h.e_ident[EI_DATA]))
 	{
 		h.e_type = Swap16(h.e_type);
 		h.e_version = Swap32(h.e_version);
