@@ -3,6 +3,7 @@
 #include <elf.h>
 
 #include "read_header.h"
+#include "read_sect_table.h"
 
 int main (int argc, char * argv[])
 {
@@ -30,6 +31,14 @@ int main (int argc, char * argv[])
 	}*/
 	
 	show_header (header);
+	
+	//printf(" On récupère la table des sections : \n");
+	//SectionsTable liste_sections;
+	//liste_sections = 
+	get_sections(elf, header);
+	
+	//printf(" On affiche la table des sections : \n");
+	//afficher_sections_table(elf, &liste_sections, header);
 	
 	fclose(elf);
 }
