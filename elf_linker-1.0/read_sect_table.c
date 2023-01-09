@@ -7,6 +7,12 @@
 #include "elf.h"
 #include "read_header.h"
 
+int cmpfunc (const void * a, const void * b){
+	const Section * v1 = (Section *) a;
+	const Section * v2 = (Section *) b;
+   return ( v1 -> SectionHeader.sh_name >= v2 -> SectionHeader.sh_name);
+}
+
 //SectionsTable 
 int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 {
@@ -28,10 +34,38 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 		}
 	}
 
+	qsort(tab.sectTab, tab.nb_sect, sizeof(Section), cmpfunc);
+
+	fseek(elf, header.e_shoff, SEEK_SET);
+
+	//uint32_t indexes[tab.nb_sect];
 
 
+	int string_table_offset = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_offset);
+	int string_table_size = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_size);
 
+	char * res = NULL;
 
+	for (int i = 0; i < tab.nb_sect; i++)
+	{
+		if (tab.nb_sect - i == 1)
+		{
+			res = fgets(tab.sectTab[i].SectionName, (string_table_offset + string_table_size) - (string_table_offset + Swap32(tab.sectTab[i].SectionHeader.sh_name) - 1), elf);
+		}
+		else
+		{
+			res = fgets(tab.sectTab[i].SectionName, (string_table_offset + Swap32(tab.sectTab[i + 1].SectionHeader.sh_name)) - (string_table_offset + Swap32(tab.sectTab[i].SectionHeader.sh_name) - 1), elf);			
+		}
+	}
+	if (res!=NULL)
+	{
+		for (int i = 0; i < tab.nb_sect; i++)
+		{
+			printf("%s\n", tab.sectTab[i].SectionName);
+		}
+	}
+
+	
 
 
 
