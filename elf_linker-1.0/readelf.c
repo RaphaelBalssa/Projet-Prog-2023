@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <elf.h>
 
+#include "util.h"
 #include "read_header.h"
+#include "read_sect_table.h"
+
 
 int main (int argc, char * argv[])
 {
@@ -11,6 +14,8 @@ int main (int argc, char * argv[])
 		printf ("Usage: ./readelf <name of file>");
 		return -1;
 	}
+	
+	int big_endian = is_big_endian();
 	
 	//Opening the file in binary form for reading
 	FILE * elf = fopen(argv[1], "rb");
@@ -24,12 +29,9 @@ int main (int argc, char * argv[])
 	//Retrieval of the file header and display of said header on the standard output (the screen)
 	Elf32_Ehdr header = read_header(elf);
 	
-	/*for (int i = 0; i < 16; i++)
-	{
-		printf("%02X ", header.e_ident[i]);
-	}*/
-	
 	show_header (header);
+	
+	get_sections(elf, header, big_endian);
 	
 	fclose(elf);
 }

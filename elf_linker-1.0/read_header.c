@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <elf.h>
-
+#include "util.h"
 
 //Swaps endianess on a 16-bit value
 uint16_t Swap16(uint16_t value)
@@ -23,21 +23,24 @@ Elf32_Ehdr read_header(FILE * elf)
 {
 	Elf32_Ehdr h;
 	
-	fread(&h, sizeof(h), 1, elf);
-	if (h.e_ident[EI_DATA] == 2)
+	if (fread(&h, sizeof(h), 1, elf))
 	{
-		h.e_type = Swap16(h.e_type);
-		h.e_version = Swap32(h.e_version);
-		h.e_entry = Swap32(h.e_entry);
-		h.e_phoff = Swap32(h.e_phoff);
-		h.e_shoff = Swap32(h.e_shoff);
-		h.e_flags = Swap32(h.e_flags);
-		h.e_ehsize = Swap16(h.e_ehsize);
-		h.e_phentsize = Swap16(h.e_phentsize);
-		h.e_phnum = Swap16(h.e_phnum);
-		h.e_shentsize = Swap16(h.e_shentsize);
-		h.e_shnum = Swap16(h.e_shnum);
-		h.e_shstrndx = Swap16(h.e_shstrndx);
+		if (!is_big_endian())
+		//if (h.e_ident[EI_DATA] == 2)
+		{
+			h.e_type = Swap16(h.e_type);
+			h.e_version = Swap32(h.e_version);
+			h.e_entry = Swap32(h.e_entry);
+			h.e_phoff = Swap32(h.e_phoff);
+			h.e_shoff = Swap32(h.e_shoff);
+			h.e_flags = Swap32(h.e_flags);
+			h.e_ehsize = Swap16(h.e_ehsize);
+			h.e_phentsize = Swap16(h.e_phentsize);
+			h.e_phnum = Swap16(h.e_phnum);
+			h.e_shentsize = Swap16(h.e_shentsize);
+			h.e_shnum = Swap16(h.e_shnum);
+			h.e_shstrndx = Swap16(h.e_shstrndx);
+		}
 	}
 	return h;
 }
