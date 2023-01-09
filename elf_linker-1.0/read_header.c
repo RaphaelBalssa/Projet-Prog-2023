@@ -42,23 +42,16 @@ Elf32_Ehdr read_header(FILE * elf)
 			h.e_shstrndx = Swap16(h.e_shstrndx);
 		}
 	}
-	
-	if(i == 1){
-        	return h;
-    	} else {
-        	printf("irrelevant test to avoid warning");
-    	}
-    
-    	return h;
+	return h;
 }
 
 void show_header (Elf32_Ehdr h)
 {
-  printf("En-tête ELF:\n");
+	printf ("ELF Header:\n");
 	
-  //Magic Number
-  printf("  Magique:   ");
-	for (int i = 0; i < 15; i++)
+	//Magic Number
+	printf("Magic Number: ");
+	for (int i = 0; i < 14; i++)
 	{
 		printf("%02X ", h.e_ident[i]);
 	}
@@ -69,13 +62,13 @@ void show_header (Elf32_Ehdr h)
 	switch(h.e_ident[EI_CLASS])
 	{
 		case 0:
-			printf("  Classe:                            Invalide\n");
+			printf("  Class:                             Invalid\n");
 			break;
 		case 1:
-			printf("  Classe:                            ELF32\n");
+			printf("  Class:                             ELF32\n");
 			break;
 		case 2:
-			printf("  Classe:                            ELF64\n");
+			printf("  Class:                             ELF64\n");
 			break;
 	}
 	    
@@ -83,24 +76,24 @@ void show_header (Elf32_Ehdr h)
 	switch(h.e_ident[EI_DATA])
 	{
 		case 0:
-			printf("  Données:                           Invalide\n");
+			printf("  Data:                              Invalid\n");
 			break;
 		case 1:
-			printf("  Données:                          complément à 2, système à octets de poids fort d'abord (little endian)\n");
+			printf("  Data:                              2's complement, Little Endian\n");
 			break;
 		case 2:
-			printf("  Données:                          complément à 2, système à octets de poids fort d'abord (big endian)\n");
+			printf("  Data:                              2's complement, Big Endian\n");
 			break;
 	}
 	
 	//ELF Version
 	if (h.e_ident[EI_VERSION] == 1)
 	{
-		printf("  Version:                           1 (actuelle)\n");
+		printf("  Version:                           1\n");
 	}
 	else
 	{
-		printf("  Version:                           Invalide\n");
+		printf("  Version:                           Invalid\n");
 	}
 	
 	//OS/ABI
@@ -172,38 +165,38 @@ void show_header (Elf32_Ehdr h)
     	}
 
 	//ABI Version
-	printf("  Version ABI:                       %d\n", h.e_ident[EI_ABIVERSION]);
+	printf("  ABI Version:                       %d\n", h.e_ident[EI_ABIVERSION]);
 	
 	//File Type
-	printf("  Type:                             ");
+	printf("  Type:                              ");
 	switch (h.e_type)
 	{
 		case 0:
-			printf(" Inconnu\n");
+			printf("Unknown)\n");
 			break;
 		case 1:
-			printf(" REL (Fichier de réadressage)\n");
+			printf("REL (Relocatable file)\n");
 			break;
 		case 2:
-			printf(" EXEC (Fichier exécutable)\n");
+			printf("EXEC (Executable file)\n");
 			break;
 		case 3:
-			printf(" DYN (Objet partagé)\n");
+			printf("DYN (Shared Object)\n");
 			break;
 		case 4:
-			printf(" CORE (Fichier core)\n");
+			printf("CORE (Core file)\n");
 			break;
 		case 65024:
-			printf(" LOOS (Operating System Specific File)\n");
+			printf("LOOS (Operating System Specific File)\n");
 			break;
 		case 65279:
-			printf(" HIOS (Operating System Specific File)\n");
+			printf("HIOS (Operating System Specific File)\n");
 			break;
 		case 65280:
-			printf(" LOPROC (Processor Specific File)\n");
+			printf("LOPROC (PRocessor Specific File)\n");
 			break;
 		case 65535:
-			printf(" HIPROC (Processor Specific File)\n");
+			printf("HIPROC (Processor Specific File)\n");
 			break;
 	}
 
@@ -214,31 +207,31 @@ void show_header (Elf32_Ehdr h)
 	printf("  Version:                           0x%X\n", h.e_version);
 
 	//Entry Point Address
-    	printf("  Adresse du point d'entrée:         0x%X\n", h.e_entry);
+    	printf("  Entry point address:               0x%X\n", h.e_entry);
 
 	//Start of program headers
-    	printf("  Début des en-têtes de programme :  %d (octets dans le fichier)\n", h.e_phoff);
+    	printf("  Start of program headers:          %d (bytes into file)\n", h.e_phoff);
     	
     	//Start of section headers
-    	printf("  Début des en-têtes de section :    %d (octets dans le fichier)\n", h.e_shoff);
+    	printf("  Start of section headers:          %d (bytes into file)\n", h.e_shoff);
     	
     	//Flags
-    	printf("  Fanions:                           0x%x, Version5 EABI\n", h.e_flags); //estce toujours EABI V 5
+    	printf("  Flags:                             0x%x\n", h.e_flags);
     	
     	//Size of header
-    	printf("  Taille de cet en-tête:             %d (octets)\n", h.e_ehsize);
+    	printf("  Size of this header:               %d (bytes)\n", h.e_ehsize);
     	
     	//Size of program headers
-    	printf("  Taille de l'en-tête du programme:  %d (octets)\n", h.e_phentsize);
+    	printf("  Size of program headers:           %d (bytes)\n", h.e_phentsize);
     
     	//Number of program headers
-    	printf("  Nombre d'en-tête du programme:     %d\n", h.e_phnum);
+    	printf("  Number of program headers:         %d\n", h.e_phnum);
  	
  	//Size of section headers   
- 	printf("  Taille des en-têtes de section:    %d (octets)\n", h.e_shentsize);
+ 	printf("  Size of section headers:           %d (bytes)\n", h.e_shentsize);
     
     	//Number of section headers
-   	printf("  Nombre d'en-têtes de section:      %d\n", h.e_shnum);
+   	printf("  Number of section headers:         %d\n", h.e_shnum);
     
-    	printf("  Table d'index des chaînes d'en-tête de section: %d\n", h.e_shstrndx);
+    	printf("  Section header string table index: %d\n", h.e_shstrndx);
 }

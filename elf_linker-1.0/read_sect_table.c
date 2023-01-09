@@ -4,15 +4,39 @@
 #include <stdint.h>
 #include "read_header.h"
 #include "read_sect_table.h"
-#include <elf.h>
+#include "elf.h"
+#include "read_header.h"
 
 //SectionsTable 
-void get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
+int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 {
 	SectionsTable tab;
 	tab.sectTab = (Section *) malloc (header.e_shnum * sizeof(Section));
 	tab.nb_sect = header.e_shnum;
 	
+	
+	printf("\n\n\n\n");
+
+
+	fseek(elf, header.e_shoff, SEEK_SET);
+	
+	for (int i = 0; i < header.e_shnum; i++)
+	{
+		if (!fread(&tab.sectTab[i], 40, 1, elf))
+		{
+			return -1;
+		}
+	}
+
+
+
+
+
+
+
+
+
+
 	int string_table_offset = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_offset);
 	int string_table_size = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_size);
 	
@@ -21,56 +45,45 @@ void get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 	fseek(elf, string_table_offset + 1, SEEK_SET);
 	int j = 0;
 	int section_index = 0;
-	char table[20];
+	//char table[20];
 	for (int i = 0;  i < string_table_size; i++)
 	{
-		char c = fgetc(elf);
+		tab.sectTab[i].SectionName = (char *) malloc (20 * sizeof(char));
+		if (fread(tab.sectTab[i].SectionName, sizeof(char), 20, elf))
+		{
+			printf("%s\n", tab.sectTab[i].SectionName);
+		}
+		/*char c = fgetc(elf);
 		table[j] = c;
 		if (c == 0)
 		{
-			tab.sectTab[section_index].SectionName = (char *) malloc ((strlen(table) + 1) * sizeof(char));
+			//printf("%s\n", table);
+			tab.sectTab[section_index].SectionName = (char *) malloc ((strlen(table)+1)*sizeof(char));
 			strcpy(tab.sectTab[section_index].SectionName, table);
+			tab.sectTab[section_index].SectionName[0] = '.';
+			tab.sectTab[section_index].SectionName[strlen(table)] = '\0';
+			/*for (int r = 0; r < strlen(table) + 1; r++)
+			{
+
+				printf("%c", tab.sectTab[section_index].SectionName[r]);
+			}
+			printf("%-17s", tab.sectTab[section_index].SectionName);
+			printf("\n");
 			section_index++;
 			j = 0;
 		}
 		else
 		{
 			j++;
-			
-		}
+		}*/
 	}
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	printf("\n\n\n\n");
-	
-	printf("\n");
-	
-	fseek(elf, header.e_shoff, SEEK_SET);
-	
-	for (int i = 0; i < header.e_shnum; i++)
+	for (int i = 0; i < tab.nb_sect; i++)
 	{
-		if (fread(&tab.sectTab[i], 40, 1, elf))
-		{
-			printf ("Section %d: \n", i);
-			printf ("Name: %s\n",tab.sectTab[section_index].SectionName);
+		printf ("Section %d: \n", i);
+			printf ("Name: %d\n",Swap32(tab.sectTab[i].SectionHeader.sh_name));
 			printf ("Type %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_type));
 			printf ("Flags: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_flags));
 			printf ("Address: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_addr));
@@ -81,8 +94,28 @@ void get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 			printf ("Addralign: : %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_addralign));
 			printf ("Entsize: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_entsize));
 			printf ("\n\n\n\n");
-		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	printf("\n");
+	
+	
 	
 	
 	
