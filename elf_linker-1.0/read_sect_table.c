@@ -37,14 +37,14 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 
 
 
-	int string_table_offset = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_offset);
+	/*int string_table_offset = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_offset);
 	int string_table_size = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_size);
 	
 	
 	
 	fseek(elf, string_table_offset + 1, SEEK_SET);
-	int j = 0;
-	int section_index = 0;
+	//int j = 0;
+	//int section_index = 0;
 	//char table[20];
 	for (int i = 0;  i < string_table_size; i++)
 	{
@@ -53,7 +53,7 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 		{
 			printf("%s\n", tab.sectTab[i].SectionName);
 		}
-		/*char c = fgetc(elf);
+		char c = fgetc(elf);
 		table[j] = c;
 		if (c == 0)
 		{
@@ -62,7 +62,7 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 			strcpy(tab.sectTab[section_index].SectionName, table);
 			tab.sectTab[section_index].SectionName[0] = '.';
 			tab.sectTab[section_index].SectionName[strlen(table)] = '\0';
-			/*for (int r = 0; r < strlen(table) + 1; r++)
+			for (int r = 0; r < strlen(table) + 1; r++)
 			{
 
 				printf("%c", tab.sectTab[section_index].SectionName[r]);
@@ -75,8 +75,8 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 		else
 		{
 			j++;
-		}*/
-	}
+		}
+	}*/
 	
 	
 	
@@ -231,6 +231,7 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 	}
 	free(sectNames);*/
 	//return tableSection;
+	return 0;
 }
 
 
