@@ -6,7 +6,6 @@
 #include "read_header.h"
 #include "read_sect_table.h"
 
-
 int main (int argc, char * argv[])
 {
 	if (argc != 2)
