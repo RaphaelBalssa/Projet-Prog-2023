@@ -6,7 +6,21 @@
 #include "read_sect_table.h"
 #include "elf.h"
 #include "read_header.h"
+#include "util.h"
 
+
+void revstr(char *str)
+{
+	int len, temp;
+	len = strlen(str);
+	
+	for (int i = 0; i < len / 2; i++)
+	{
+		temp = str[i];
+		str[i] = str[len - i - 1];
+		str[len - i - 1] = temp;
+	}
+}
 
 // Fonction de comparaison entre deux noms pour trier les sections
 int cmpfunc (const void * a, const void * b){
@@ -163,15 +177,11 @@ SectionsTable get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTable tab)
 {
 
-  //TODO : Faire une fonction sur les flags
-  //       Trier les sections
-  //       Espoir sur les noms
+  //TODO : Espoir sur les noms
   
   
   	char *type = "";
   	char flags[3] = "";
-  
-  
   
 	printf("There are %d section headers, starting at offset 0x%x:\n\n", tab.nb_sect, header.e_shoff);
 	printf("Section Headers:\n  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
@@ -180,8 +190,8 @@ void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTab
 	{
 		type = lire_type(Swap32(tab.sectTab[i].SectionHeader.sh_type));
 		lire_flags(flags, Swap32(tab.sectTab[i].SectionHeader.sh_flags));
-		//lire_flags(flags, 40);
-		printf("  [%2d] %-17X %-15s %08x %06x ", i,
+		revstr(flags);
+		printf("  [%2d] %-17x %-15s %08x %06x ", i,
 			   Swap32(tab.sectTab[i].SectionHeader.sh_name),
 			   type,
 			   Swap32(tab.sectTab[i].SectionHeader.sh_addr),
@@ -189,7 +199,6 @@ void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTab
 		printf("%06x %02x %3s %2d  %2d %2d\n",
 			   Swap32(tab.sectTab[i].SectionHeader.sh_size),
 			   Swap32(tab.sectTab[i].SectionHeader.sh_entsize),
-			   //Swap32(tab.sectTab[i].SectionHeader.sh_flags),
 			   flags,
 			   Swap32(tab.sectTab[i].SectionHeader.sh_link),
 			   Swap32(tab.sectTab[i].SectionHeader.sh_info),
@@ -234,23 +243,7 @@ void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTab
 		}
 	}
 
-	for (int i = 0; i < tab.nb_sect; i++)
-	{
-		printf ("Section %d: \n", i);
-			printf ("Name: %d\n",Swap32(tab.sectTab[i].SectionHeader.sh_name));
-			printf ("Type %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_type));
-			printf ("Flags: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_flags));
-			printf ("Address: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_addr));
-			printf ("Offset: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_offset));
-			printf ("Size: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_size));
-			printf ("Link: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_link));
-			printf ("Info: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_info));
-			printf ("Addralign: : %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_addralign));
-			printf ("Entsize: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_entsize));
-			printf ("\n\n\n\n");
-	}
-	*/
-	
+*/
 	
 	
 	/*printf("String table index: %X\n", header.e_shstrndx);
@@ -313,55 +306,5 @@ void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTab
 
 
 
-
-
-
-
-/*	lire_sections_table(FILE *elfFile, Elf64_Ehdr header)
-		Lit la table des sections dans le fichier elfFile
-*/
-/*SectionsList lire_sections_table(FILE * elfFile, Elf32_Ehdr header)
-{
-	// Placement du curseur au debut de la premiere section
-	fseek(elfFile, header.e_shoff, SEEK_SET);
-
-	// Lecture de l'en-tete de la premiere section
-	for (int i = 0; i < header.e_shnum; i++)
-	{
-		// Lecture de l'en-tete de la section courante
-		//fseek(elfFile, header.e_shoff + i * , SEEK_SET);
-		int j = fread(&tableSection.sectTab[i], sizeof(header.e_shentsize), 1, elfFile);
-		if (j)
-		{
-			j =0;
-		}
-
-		// Allocation memoire des donnees de la taille de la section definie par tab[i]
-		//tableSection[i] = malloc(tableSection[i].sh_size);
-	}
-	
-	
-	//fread(&sectHdr, 1, sizeof(sectHdr), elfFile);
-
-	// Allocation dans sectNames du nom de la premiere section
-	sectNames = malloc(sectHdr.sh_size);
-	fseek(elfFile, sectHdr.sh_offset, SEEK_SET);
-	fread(sectNames, 1, sectHdr.sh_size, elfFile);
-
-	// Preparation de la table de sections
-	tableSection = malloc(sizeof(Elf32_Shdr) * header.e_shnum);
-
-	// Parcours de toutes les sections
-	for (int i = 0; i < header.e_shnum; i++)
-	{
-		// Lecture de l'en-tete de la section courante
-		fseek(elfFile, header.e_shoff + i * sizeof(tableSection[i]), SEEK_SET);
-		fread(&tableSection[i], 1, sizeof(tableSection[i]), elfFile);
-
-		// Allocation memoire des donnees de la taille de la section definie par tab[i]
-		tableSection[i] = malloc(tableSection[i].sh_size);
-	}
-	free(sectNames);*/
-	//return tableSection;
 
 
