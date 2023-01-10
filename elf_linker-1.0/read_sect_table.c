@@ -7,11 +7,103 @@
 #include "elf.h"
 #include "read_header.h"
 
+
+// Fonction de comparaison entre deux noms pour trier les sections
 int cmpfunc (const void * a, const void * b){
 	const Section * v1 = (Section *) a;
 	const Section * v2 = (Section *) b;
    return ( v1 -> SectionHeader.sh_name >= v2 -> SectionHeader.sh_name);
 }
+
+/*	lire_type(long num, char *sh_type)
+		Lit la valeur donnee dans le premier parametre afin de definir la valeur du second
+*/
+void lire_type(long num, char *sh_type)
+{
+	// Documentation chapitre 1-11 Figure 1-9
+	switch (num)
+	{
+	case 0:
+		strcpy(sh_type, "NULL");
+		break;
+	case 1:
+		strcpy(sh_type, "PROGBITS");
+		break;
+	case 2:
+		strcpy(sh_type, "SYMTAB");
+		break;
+	case 3:
+		strcpy(sh_type, "STRTAB");
+		break;
+	case 4:
+		strcpy(sh_type, "RELA");
+		break;
+	case 5:
+		strcpy(sh_type, "HASH");
+		break;
+	case 6:
+		strcpy(sh_type, "DYNAMIC");
+		break;
+	case 7:
+		strcpy(sh_type, "NOTE");
+		break;
+	case 8:
+		strcpy(sh_type, "NOBITS");
+		break;
+	case 9:
+		strcpy(sh_type, "REL");
+		break;
+	case 10:
+		strcpy(sh_type, "SHLIB");
+		break;
+	case 11:
+		strcpy(sh_type, "DYNSYM");
+		break;
+	case 14:
+		strcpy(sh_type, "INIT_ARRAY");
+		break;
+	case 15:
+		strcpy(sh_type, "FINI_ARRAY");
+		break;
+	case 16:
+		strcpy(sh_type, "PREINIT_ARRAY");
+		break;
+	case 17:
+		strcpy(sh_type, "GROUP");
+		break;
+	case 18:
+		strcpy(sh_type, "SYMTAB_SHNDX");
+		break;
+	case 0x6ffffff6:
+		strcpy(sh_type, "GNU_HASH");
+		break;
+	case 0x6ffffffd:
+		strcpy(sh_type, "VERDEF");
+		break;
+	case 0x6ffffffe:
+		strcpy(sh_type, "VERNEED");
+		break;
+	case 0x6fffffff:
+		strcpy(sh_type, "VERSYM");
+		break;
+	case 0x70000000:
+		strcpy(sh_type, "LOPROC");
+		break;
+	case 0x7fffffff:
+		strcpy(sh_type, "HIPROC");
+		break;
+	case 0x80000000:
+		strcpy(sh_type, "LOUSER");
+		break;
+	case 0xffffffff:
+		strcpy(sh_type, "HIUSER");
+		break;
+	default:
+		strcpy(sh_type, "UNKOWN");
+		break;
+	}
+}
+
 
 //SectionsTable 
 int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
@@ -40,7 +132,7 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 
 	//uint32_t indexes[tab.nb_sect];
 
-
+/*
 	int string_table_offset = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_offset);
 	int string_table_size = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_size);
 
@@ -65,55 +157,6 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 		}
 	}
 
-	
-
-
-
-
-
-	/*int string_table_offset = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_offset);
-	int string_table_size = Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_size);
-	
-	
-	
-	fseek(elf, string_table_offset + 1, SEEK_SET);
-	//int j = 0;
-	//int section_index = 0;
-	//char table[20];
-	for (int i = 0;  i < string_table_size; i++)
-	{
-		tab.sectTab[i].SectionName = (char *) malloc (20 * sizeof(char));
-		if (fread(tab.sectTab[i].SectionName, sizeof(char), 20, elf))
-		{
-			printf("%s\n", tab.sectTab[i].SectionName);
-		}
-		char c = fgetc(elf);
-		table[j] = c;
-		if (c == 0)
-		{
-			//printf("%s\n", table);
-			tab.sectTab[section_index].SectionName = (char *) malloc ((strlen(table)+1)*sizeof(char));
-			strcpy(tab.sectTab[section_index].SectionName, table);
-			tab.sectTab[section_index].SectionName[0] = '.';
-			tab.sectTab[section_index].SectionName[strlen(table)] = '\0';
-			for (int r = 0; r < strlen(table) + 1; r++)
-			{
-
-				printf("%c", tab.sectTab[section_index].SectionName[r]);
-			}
-			printf("%-17s", tab.sectTab[section_index].SectionName);
-			printf("\n");
-			section_index++;
-			j = 0;
-		}
-		else
-		{
-			j++;
-		}
-	}*/
-	
-	
-	
 	for (int i = 0; i < tab.nb_sect; i++)
 	{
 		printf ("Section %d: \n", i);
@@ -129,31 +172,46 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 			printf ("Entsize: %X\n",Swap32(tab.sectTab[i].SectionHeader.sh_entsize));
 			printf ("\n\n\n\n");
 	}
+	*/
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	printf("\n");
-	
-	
-	
-	
-	
-	printf ("\n\n\n\n");
+ 
+ 
+  //TODO : Faire une fonction pour switch sur les types et sur les flags
+  //       Trier les sections
+  //       Espoir sur les noms
+   
+	printf("There are %d section headers, starting at offset 0x%x:\n\n", tab.nb_sect, header.e_shoff);
+	printf("Section Headers:\n  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
+
+	for (int i = 0; i < tab.nb_sect; i++)
+	{
+    //printf("  [%2d] %-17s %X %08x %06x ", i,
+		printf("  [%2d] %X %08x %06x ", i,
+			   //Swap32(tab.sectTab[i].SectionHeader.sh_name),
+			   Swap32(tab.sectTab[i].SectionHeader.sh_type),
+			   Swap32(tab.sectTab[i].SectionHeader.sh_addr),
+			   Swap32(tab.sectTab[i].SectionHeader.sh_offset));
+		printf("%06x %02x %X %2d  %2d %2d\n",
+			   Swap32(tab.sectTab[i].SectionHeader.sh_size),
+			   Swap32(tab.sectTab[i].SectionHeader.sh_entsize),
+			   Swap32(tab.sectTab[i].SectionHeader.sh_flags),
+			   Swap32(tab.sectTab[i].SectionHeader.sh_link),
+			   Swap32(tab.sectTab[i].SectionHeader.sh_info),
+			   Swap32(tab.sectTab[i].SectionHeader.sh_addralign));
+	}
+
+	/* En termes de flags, certains n'étaient pas présents dans la documentation.
+	   W, A, X sont dans la documentation chapitre 1-13 et 1-14 Figure 1-11.
+	   Les autres flags sont dans la fonction reference readelf -S <nomFichier> */
+	printf("Key to Flags:\n");
+	printf("  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),\n");
+	printf("  L (link order), O (extra OS processing required), G (group), T (TLS),\n");
+	printf("  C (compressed), x (unknown), o (OS specific), E (exclude),\n");
+	printf("  p (processor specific)\n");
+ 
+ 	return 0;
+}
+
 	
 	/*printf("String table index: %X\n", header.e_shstrndx);
 	printf("String table offset: %X\n", Swap32(tab.sectTab[header.e_shstrndx].SectionHeader.sh_offset));
@@ -197,8 +255,8 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 		}
 		
 	}*/
-	printf("\n\n\n\n");
 	//return tab;
+
 
 
 
@@ -265,55 +323,5 @@ int get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 	}
 	free(sectNames);*/
 	//return tableSection;
-	return 0;
-}
 
 
-/*	afficher_sections_table(SectionsList liste, uint32_t offset)
-		Affichage de la table des sections et des informations pour chaque section
-*/
-/*void afficher_sections_table(FILE * elf, SectionsList * tableSection, Elf32_Ehdr header)
-{
-	printf("There are %d section headers, starting at offset 0x%x:\n\n", header.e_shnum, header.e_shoff);
-	printf("Section Headers:\n  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al\n");
-	
-	
-	
-	for (int i = 0; i < header.e_shnum; i++)
-	{
-		char name[30] = "";
-		fseek(elf, header.e_shstrndx + tableSection->sectTab[i].header.sh_name, SEEK_SET);
-		int j = fread(&name, 30, 1, elf);
-		if (j)
-		{
-			j = 0;
-		}
-		//strcpy(name, header.shstrndx);
-		if (strlen(name) > 17)
-		{
-			name[17] = '\0';
-		}*/
-		
-		/*printf("  [%2d] %-17s %X %08x %06x ", i,
-			   name,
-			   tableSection -> sectTab[i].header.sh_type,
-			   tableSection -> sectTab[i].header.sh_addr,
-			   tableSection -> sectTab[i].header.sh_offset);
-		printf("%06x %02x %X %2d  %2d %2d\n",
-			   tableSection -> sectTab[i].header.sh_size,
-			   tableSection -> sectTab[i].header.sh_entsize,
-			   tableSection -> sectTab[i].header.sh_flags,
-			   tableSection -> sectTab[i].header.sh_link,
-			   tableSection -> sectTab[i].header.sh_info,
-			   tableSection -> sectTab[i].header.sh_addralign);
-	}*/
-
-	/* En termes de flags, certains n'étaient pas présents dans la documentation.
-	   W, A, X sont dans la documentation chapitre 1-13 et 1-14 Figure 1-11.
-	   Les autres flags sont dans la fonction reference readelf -S <nomFichier> */
-	/*printf("Key to Flags:\n");
-	printf("  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),\n");
-	printf("  L (link order), O (extra OS processing required), G (group), T (TLS),\n");
-	printf("  C (compressed), x (unknown), o (OS specific), E (exclude),\n");
-	printf("  p (processor specific)\n");
-}*/

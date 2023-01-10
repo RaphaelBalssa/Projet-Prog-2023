@@ -32,6 +32,7 @@ typedef struct
  *******************************************************************************/
 //SectionsTable 
 int get_sections (FILE * elf, Elf32_Ehdr header, int endianess);
+void lire_type(long num, char *sh_type);
 //SectionsList lire_sections_table(FILE *elfFile, Elf32_Ehdr header);
 
 
