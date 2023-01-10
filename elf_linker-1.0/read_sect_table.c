@@ -175,6 +175,7 @@ SectionsTable get_sections(FILE * elf, Elf32_Ehdr header, int endianess)
 		{
 			printf("Erreur \n");
 		}
+
 	}
 
 	// Tentative de tri pour recuperer les noms des sections en string

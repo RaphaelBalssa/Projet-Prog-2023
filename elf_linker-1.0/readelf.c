@@ -26,26 +26,23 @@ int main (int argc, char * argv[])
 		return -1;
 	}
 	
-	fseek(elf, 0, SEEK_END);
-	
-	int file_size = ftell(elf);
-	
 	fseek(elf, 0, SEEK_SET);
 	
 	//Retrieval of the file header and display of said header on the standard output (the screen)
 	Elf32_Ehdr header = read_header(elf);
 	
-	show_header (header);
+	show_header(header);
 	
 	SectionsTable tabSections;
 	tabSections = get_sections(elf, header, big_endian);
 	afficher_sections(elf, header, big_endian, tabSections);
 	
-	uint8_t * tab = (uint8_t *) malloc (file_size * sizeof(uint8_t));
 	
-	tab = get_section(tabSections,"12", header, elf);
-	
-	dumpSection(tab, tabSections.sectTab[12].SectionHeader.sh_size, 12);
+	uint8_t *sectionLue;
+	Section sect;
+	sectionLue = get_section_data(tabSections,"12", header, elf);
+	sect = get_section(tabSections,"12", header, elf);
+	dumpSection(sectionLue, sect, tabSections.sectTab[12].SectionHeader.sh_size, 12);
 	
 	fclose(elf);
 }
