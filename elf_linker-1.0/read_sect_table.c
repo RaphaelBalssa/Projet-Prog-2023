@@ -108,6 +108,28 @@ char * lire_type(long num)
 }
 
 
+void lire_flags(char *tab, int n)
+{
+	int j = 0;
+	// Les valeurs des deux tableaux proviennent de la documentation 
+	// (et des informations decrites sous la fonction readelf -S <fichier> )
+	int tabVal[12] = {2048, 1024, 512, 256, 128, 64, 32, 16, 4, 2, 1, 0};
+	char tabChar[12] = {'C','T','G','O','L','I','S','M','X','A','W',' '};
+	
+	for (int i = 0; n > 0; i++)
+	{
+		if (n >= tabVal[i])
+		{
+			tab[j] = tabChar[i];
+			n -= tabVal[i];
+			j++;
+		}
+	}
+	tab[j] = '\0';
+}
+
+
+
 //SectionsTable 
 SectionsTable get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 {
@@ -129,7 +151,7 @@ SectionsTable get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 		}
 	}
 
-	qsort(tab.sectTab, tab.nb_sect, sizeof(Section), cmpfunc);
+	//qsort(tab.sectTab, tab.nb_sect, sizeof(Section), cmpfunc);
 
 	fseek(elf, header.e_shoff, SEEK_SET);
 
@@ -141,12 +163,13 @@ SectionsTable get_sections (FILE * elf, Elf32_Ehdr header, int endianess)
 void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTable tab)
 {
 
-  //TODO : Faire une fonction pour switch sur les types et sur les flags
+  //TODO : Faire une fonction sur les flags
   //       Trier les sections
   //       Espoir sur les noms
   
   
-  char *type = "";
+  	char *type = "";
+  	char flags[3] = "";
   
   
   
@@ -156,16 +179,18 @@ void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTab
 	for (int i = 0; i < tab.nb_sect; i++)
 	{
 		type = lire_type(Swap32(tab.sectTab[i].SectionHeader.sh_type));
-    		//printf("  [%2d] %-17s %X %08x %06x ", i,
-		printf("  [%2d] %s %08x %06x ", i,
-			   //Swap32(tab.sectTab[i].SectionHeader.sh_name),
+		lire_flags(flags, Swap32(tab.sectTab[i].SectionHeader.sh_flags));
+		//lire_flags(flags, 40);
+		printf("  [%2d] %-17X %-15s %08x %06x ", i,
+			   Swap32(tab.sectTab[i].SectionHeader.sh_name),
 			   type,
 			   Swap32(tab.sectTab[i].SectionHeader.sh_addr),
 			   Swap32(tab.sectTab[i].SectionHeader.sh_offset));
-		printf("%06x %02x %X %2d  %2d %2d\n",
+		printf("%06x %02x %3s %2d  %2d %2d\n",
 			   Swap32(tab.sectTab[i].SectionHeader.sh_size),
 			   Swap32(tab.sectTab[i].SectionHeader.sh_entsize),
-			   Swap32(tab.sectTab[i].SectionHeader.sh_flags),
+			   //Swap32(tab.sectTab[i].SectionHeader.sh_flags),
+			   flags,
 			   Swap32(tab.sectTab[i].SectionHeader.sh_link),
 			   Swap32(tab.sectTab[i].SectionHeader.sh_info),
 			   Swap32(tab.sectTab[i].SectionHeader.sh_addralign));

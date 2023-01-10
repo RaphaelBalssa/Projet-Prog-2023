@@ -53,7 +53,8 @@ readelf.o: readelf.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h /usr/include/elf.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h read_header.h
+ /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h util.h read_header.h \
+ read_sect_table.h read_section.h
 /usr/include/stdc-predef.h:
 /usr/include/stdio.h:
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
@@ -117,4 +118,7 @@ readelf.o: readelf.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 /usr/include/stdint.h:
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
 /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
+util.h:
 read_header.h:
+read_sect_table.h:
+read_section.h:

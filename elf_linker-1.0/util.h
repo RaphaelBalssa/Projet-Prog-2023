@@ -23,7 +23,13 @@ Contact: Guillaume.Huard@imag.fr
 #ifndef __UTIL_H__
 #define __UTIL_H__
 
+#include <stdint.h>
+
 int is_big_endian();
+
+uint16_t Swap16(uint16_t value);
+
+uint32_t Swap32(uint32_t value);
 
 #define reverse_2(x) ((((x)&0xFF)<<8)|(((x)>>8)&0xFF))
 #define reverse_4(x) ((((x)&0xFF)<<24)|((((x)>>8)&0xFF)<<16)|\

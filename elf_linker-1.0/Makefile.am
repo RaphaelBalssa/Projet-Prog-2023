@@ -22,7 +22,7 @@ COMMON=debug.h debug.c util.h util.c
 
 EXTRA_DIST=filtre.pl
 Options_and_debug_example_SOURCES=$(COMMON) Options_and_debug_example.c
-readelf_SOURCES=$(COMMON) readelf.c read_header.c read_header.h read_sect_table.c read_sect_table.h
+readelf_SOURCES=$(COMMON) readelf.c read_header.c read_header.h read_sect_table.c read_sect_table.h read_section.c read_section.h
 
 EXTRA_DIST+=
 

@@ -3,22 +3,6 @@
 #include <elf.h>
 #include "util.h"
 
-//Swaps endianess on a 16-bit value
-uint16_t Swap16(uint16_t value)
-{
-    return (((value & 0x00FF) << 8) |
-            ((value & 0xFF00) >> 8));
-}
-
-//Swaps endianess on a 32-bit value
-uint32_t Swap32(uint32_t value) 
-{
-    return (((value & 0x000000FF) << 24) |
-            ((value & 0x0000FF00) <<  8) |
-            ((value & 0x00FF0000) >>  8) |
-            ((value & 0xFF000000) >> 24));
-}
-
 Elf32_Ehdr read_header(FILE * elf)
 {
 	Elf32_Ehdr h;

@@ -111,7 +111,8 @@ Options_and_debug_example_OBJECTS =  \
 	$(am_Options_and_debug_example_OBJECTS)
 Options_and_debug_example_LDADD = $(LDADD)
 am_readelf_OBJECTS = $(am__objects_1) readelf.$(OBJEXT) \
-	read_header.$(OBJEXT)
+	read_header.$(OBJEXT) read_sect_table.$(OBJEXT) \
+	read_section.$(OBJEXT)
 readelf_OBJECTS = $(am_readelf_OBJECTS)
 readelf_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
@@ -131,6 +132,7 @@ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/Options_and_debug_example.Po \
 	./$(DEPDIR)/debug.Po ./$(DEPDIR)/read_header.Po \
+	./$(DEPDIR)/read_sect_table.Po ./$(DEPDIR)/read_section.Po \
 	./$(DEPDIR)/readelf.Po ./$(DEPDIR)/util.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
@@ -240,12 +242,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} '/home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' aclocal-1.16
+ACLOCAL = ${SHELL} '/home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} '/home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' autoconf
-AUTOHEADER = ${SHELL} '/home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' autoheader
-AUTOMAKE = ${SHELL} '/home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' automake-1.16
+AUTOCONF = ${SHELL} '/home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' autoconf
+AUTOHEADER = ${SHELL} '/home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' autoheader
+AUTOMAKE = ${SHELL} '/home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' automake-1.16
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -274,7 +276,7 @@ LEX_OUTPUT_ROOT = lex.yy
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} '/home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' makeinfo
+MAKEINFO = ${SHELL} '/home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0/build-aux/missing' makeinfo
 MKDIR_P = /usr/bin/mkdir -p
 OBJEXT = o
 PACKAGE = elf_linker
@@ -289,10 +291,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 1.0
-abs_builddir = /home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0
-abs_srcdir = /home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0
-abs_top_builddir = /home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0
-abs_top_srcdir = /home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0
+abs_builddir = /home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0
+abs_srcdir = /home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0
+abs_top_builddir = /home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0
+abs_top_srcdir = /home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -319,7 +321,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/c/casagrdo/Projet-Prog-2023/elf_linker-1.0/build-aux/install-sh
+install_sh = ${SHELL} '/home/k/kettenis/Bureau/Prog5 Projet/Projet-Prog-2023/elf_linker-1.0/build-aux/install-sh'
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -351,7 +353,7 @@ SUBDIRS = . Examples_fusion
 COMMON = debug.h debug.c util.h util.c
 EXTRA_DIST = filtre.pl
 Options_and_debug_example_SOURCES = $(COMMON) Options_and_debug_example.c
-readelf_SOURCES = $(COMMON) readelf.c read_header.c read_header.h
+readelf_SOURCES = $(COMMON) readelf.c read_header.c read_header.h read_sect_table.c read_sect_table.h read_section.c read_section.h
 all: all-recursive
 
 .SUFFIXES:
@@ -449,6 +451,8 @@ distclean-compile:
 include ./$(DEPDIR)/Options_and_debug_example.Po # am--include-marker
 include ./$(DEPDIR)/debug.Po # am--include-marker
 include ./$(DEPDIR)/read_header.Po # am--include-marker
+include ./$(DEPDIR)/read_sect_table.Po # am--include-marker
+include ./$(DEPDIR)/read_section.Po # am--include-marker
 include ./$(DEPDIR)/readelf.Po # am--include-marker
 include ./$(DEPDIR)/util.Po # am--include-marker
 
@@ -821,6 +825,8 @@ distclean: distclean-recursive
 		-rm -f ./$(DEPDIR)/Options_and_debug_example.Po
 	-rm -f ./$(DEPDIR)/debug.Po
 	-rm -f ./$(DEPDIR)/read_header.Po
+	-rm -f ./$(DEPDIR)/read_sect_table.Po
+	-rm -f ./$(DEPDIR)/read_section.Po
 	-rm -f ./$(DEPDIR)/readelf.Po
 	-rm -f ./$(DEPDIR)/util.Po
 	-rm -f Makefile
@@ -873,6 +879,8 @@ maintainer-clean: maintainer-clean-recursive
 		-rm -f ./$(DEPDIR)/Options_and_debug_example.Po
 	-rm -f ./$(DEPDIR)/debug.Po
 	-rm -f ./$(DEPDIR)/read_header.Po
+	-rm -f ./$(DEPDIR)/read_sect_table.Po
+	-rm -f ./$(DEPDIR)/read_section.Po
 	-rm -f ./$(DEPDIR)/readelf.Po
 	-rm -f ./$(DEPDIR)/util.Po
 	-rm -f Makefile

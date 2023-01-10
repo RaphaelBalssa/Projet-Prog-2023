@@ -20,10 +20,26 @@ Contact: Guillaume.Huard@imag.fr
          51 avenue Jean Kuntzmann
          38330 Montbonnot Saint-Martin
 */
-#include "util.h"
 #include <stdint.h>
+#include "util.h"
 
 int is_big_endian() {
     static uint32_t one = 1;
     return ((* (uint8_t *) &one) == 0);
+}
+
+//Swaps endianess on a 16-bit value
+uint16_t Swap16(uint16_t value)
+{
+    return (((value & 0x00FF) << 8) |
+            ((value & 0xFF00) >> 8));
+}
+
+//Swaps endianess on a 32-bit value
+uint32_t Swap32(uint32_t value) 
+{
+    return (((value & 0x000000FF) << 24) |
+            ((value & 0x0000FF00) <<  8) |
+            ((value & 0x00FF0000) >>  8) |
+            ((value & 0xFF000000) >> 24));
 }
