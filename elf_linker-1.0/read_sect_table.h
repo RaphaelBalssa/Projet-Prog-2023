@@ -33,6 +33,7 @@ typedef struct
 //SectionsTable 
 SectionsTable get_sections (FILE * elf, Elf32_Ehdr header, int endianess);
 char * lire_type(long num);
+void lire_flags(char *tab, int n);
 void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTable tab);
 //SectionsList lire_sections_table(FILE *elfFile, Elf32_Ehdr header);
 
