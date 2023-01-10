@@ -177,7 +177,7 @@ SectionsTable get_sections(FILE * elf, Elf32_Ehdr header, int endianess)
 }
  
 // Permet d'afficher le contenu des sections selon l'affichage de readelf
-void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTable tab)
+void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTable tab) {
   
 
   	char *type = "";
