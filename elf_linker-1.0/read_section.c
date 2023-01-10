@@ -1,16 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
-char * get_section (SectionsList sections, Elf32_Ehdr header, char * section_dump, char * section)
+#include "read_sect_table.h"
+#include "util.h"
+
+uint8_t * get_section (SectionsTable sections, char * section, Elf32_Ehdr header, FILE * elf)
 {
-	int sectionNb = -1, section_size = 0, is_section_number = 1, section_address;
+	int sectionNb = -1, is_section_number = 1;
+	uint32_t section_address, section_size;
 	int i = 0;
 	
 	//Determine if we're searching a section by name or number
 	while (i != strlen(section))
 	{
-		if (!isdigit(section[i])
+		if (!isdigit(section[i]))
 		{
 			is_section_number = 0;
 			i = strlen(section);
@@ -27,52 +32,35 @@ char * get_section (SectionsList sections, Elf32_Ehdr header, char * section_dum
 		//Convert section number string into integer
 		sectionNb = atoi(section);
 		
-		if (sectionNb
+		if (!(sectionNb >=0 && sectionNb <= header.e_shnum))
+		{
+			printf("The specified section does not exist\n");
+			return NULL;
+		}
 		
-		//The offset saved inside the section header table, is the offset we need to add
-		//from the start of the file to reach the section
-	}
-}
-
-void dumpSection (SectionsList sections, char * section, FILE * elf)
-{
-	if (is_section_number)
-	{
-		//Find the offset of the start of the section inside the file and set the cursor to the
-		//	first byte of that section
-		int section_address = sections -> sectTab[sectionNb] -> header.sh_offset;
+		section_address = Swap32(sections.sectTab[sectionNb].SectionHeader.sh_offset);
+		printf("\n\n\n\n");
+		printf("%X",section_address);
+		printf("\n\n\n\n");
+		section_size = sections.sectTab[sectionNb].SectionHeader.sh_size;
 		
+		uint8_t * section_dump = (uint8_t *) malloc (section_size*sizeof(uint8_t));
+				
 		fseek(elf, section_address, SEEK_SET);
 		
-		section_size = sections -> sectTab[sectionNb] -> header.sh_size;
-		section_dump = (char *) malloc (section_size * sizeof(char));
 		
-		//Read the whole section inside our buffer
-		fread(section_dump, 1, section_size, elf);
 		
-		//Print the section, byte by byte. Every 16 bytes, we change line
-		int line = 1;
-		char * ligne = (char *) malloc (17 * sizeof(char));
-		ligne[0] = '\0';
-		for (int i = 0; i < strlen(section_dump); i++)
-		{
-			printf("%X ", section_dump[i]);
-			strncat(ligne, section_dump[i], 1);
-			if ((line * 16 % i) == 1)
-			{
-				line++;
-				printf("%s\n",ligne);
-				ligne[0] = '\0';
-			}
-		}
+		return section_dump;
 	}
-	/*else
+	return NULL;
+}
+
+void dumpSection (uint8_t * section, int section_size, int sectionNb)
+{
+	printf("Affichage de la section %d\n", sectionNb);
+	//Print the section, byte by byte.
+	for (int i = 0; i < section_size; i++)
 	{
-		char * name;
-		utoa(sections.sectTab -> header.sh_name, name, 
-		for (int i = 0; i < sections.nb_sect; i++)
-		{
-			if (strcmp(section, sections
-		}
-	}*/
+		printf("%X ", section[i]);
+	}
 }
