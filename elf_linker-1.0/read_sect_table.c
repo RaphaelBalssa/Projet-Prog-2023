@@ -112,6 +112,15 @@ char * lire_type(long num)
 	case 0xffffffff:
 		sh_type = "HIUSER";
 		break;
+	case 0x70000003U:
+		sh_type = "ARM_ATTRIBUTES";
+		break;
+	case 0x70000004U:
+		sh_type = "ARM_DEBUGOVERLAY";
+		break;
+	case 0x70000005U:
+		sh_type = "ARM_OVERLAYSECTION";
+		break;
 	default:
 		sh_type = "UNKOWN";
 		break;
