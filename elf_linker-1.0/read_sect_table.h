@@ -31,8 +31,9 @@ typedef struct
  * effet de bord : aucun
  *******************************************************************************/
 //SectionsTable 
-int get_sections (FILE * elf, Elf32_Ehdr header, int endianess);
-void lire_type(long num, char *sh_type);
+SectionsTable get_sections (FILE * elf, Elf32_Ehdr header, int endianess);
+char * lire_type(long num);
+void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTable tab);
 //SectionsList lire_sections_table(FILE *elfFile, Elf32_Ehdr header);
 
 

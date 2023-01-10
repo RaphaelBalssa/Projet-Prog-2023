@@ -30,7 +30,9 @@ int main (int argc, char * argv[])
 	
 	show_header (header);
 	
-	get_sections(elf, header, big_endian);
+	SectionsTable tabSections;
+	tabSections = get_sections(elf, header, big_endian);
+	afficher_sections(elf, header, big_endian, tabSections);
 	
 	fclose(elf);
 }
