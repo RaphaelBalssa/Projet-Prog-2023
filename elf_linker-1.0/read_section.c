@@ -113,16 +113,18 @@ void dumpSection (uint8_t *contenuSection, Section section, int section_size, in
 		printf("Section '%d' has no data to dump.\n", sectionNb);
 	} else {
 		
-		printf("Affichage de la section %d\n0x00000000 ", sectionNb);		
+		printf("Affichage de la section %d", sectionNb);		
 			
 		for(int i = 0; i < section_size; i++){
+			if((i) % 16 == 0) 
+			{
+				printf("\n0x%08x ", i);
+			}
 			printf("%02x", contenuSection[i]);
 			if((i+1) % 4 == 0) {
 				printf(" ");
 			}
-			if((i+1) % 16 == 0) {
-				printf("\n0x%08x ", i+1);
-			}
+
 		}
 		
 		printf("\n");	
