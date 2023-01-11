@@ -12,22 +12,25 @@
 /*	lire_reimp_table(SectionsList liste_sect, SymbolesList liste_symb)
 		Lit une table de reimplantation
 */
-RelocTable lire_reimp_table(SectionsList liste_sect, SymbolesList liste_symb)
+RelocTable lire_reimp_table(SectionsTable table_sect, SymboleTable symb_table)
 {
-	RelocTable table_reimp = {0, NULL};
-	table_reimp.tab = malloc(sizeof(RelocList) * 0);
+	Elf32_Rel rel;
+	Elf32_Rela rela;
+	
+	RelocTable reloc_table = {0, 0, NULL};
+	//TODO malloc pour relaTab et relTab 
 	
 	// Parcours des sections
-	for (int i = 0; i < liste_sect.nb_sect; i++)
+	for (int i = 0; i < table_sect.nb_sect; i++)
 	{
 		// Section courante
-		Section sect = liste_sect.sectTab[i];
+		Section sect = table_sect.sectTab[i];
 		
 		// Cas ou la section courante est du type SHT_RELA
-		if (sect.header.sh_type == 4)
+		if (sect.sh_type == 4)
 		{
 			// Lecture de la liste de reimplantation de la section courante
-			RelocList liste_reimp = lire_rela_liste(sect, liste_sect, liste_symb);
+			RelocTable reloc_table = ;
 			
 			// Reallocation et ajout de cette liste dans la table
 			table_reimp.nb_list++;
@@ -36,8 +39,8 @@ RelocTable lire_reimp_table(SectionsList liste_sect, SymbolesList liste_symb)
 		}
 		
 		// Cas ou la section courante est du type SHT_REL
-		else if (sect.header.sh_type == 9)
-		{
+		else if (sect.header.sh_type == 9){
+		
 			// Lecture de la liste de reimplantation de la section courante
 			RelocList liste_reimp = lire_rel_liste(sect, liste_sect, liste_symb);
 			

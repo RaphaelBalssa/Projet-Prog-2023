@@ -64,7 +64,7 @@ SymbolesList read_symb_tab(SectionTable table_sect)
 	{
 		// Calcul du nombre de symbole et allocation memoire de la liste des symboles
 		table_symb.nb_symbDyn = dynsym.sh_size / dynsym.sh_entsize;
-		table_symb.symbDynTab = malloc(sizeof(Symbole) * liste_symb.nb_symbDyn);
+		table_symb.symbDynTab = malloc(sizeof(Elf32_Sym) * liste_symb.nb_symbDyn);
 
 		// Parcours des symboles
 		for (int i = 0; i < liste_symb.nb_symbDyn; i++)
@@ -77,8 +77,8 @@ SymbolesList read_symb_tab(SectionTable table_sect)
 	if (nb > 0)
 	{
 		// Calcul du nombre de symbole et allocation memoire de la liste des symboles
-		liste_symb.nb_symb = symtab.header.sh_size / symtab.header.sh_entsize;
-		liste_symb.symbTab = malloc(sizeof(Symbole) * liste_symb.nb_symb);
+		table_symb.nb_symb = symtab.SectionHeader.sh_size / symtab.SectionHeader.sh_entsize;
+		table_symb.symbTab = malloc(sizeof(Symbole) * liste_symb.nb_symb);
 		
 		// Parcours des symboles
 		for (int i = 0; i < liste_symb.nb_symb; i++)
@@ -94,7 +94,7 @@ SymbolesList read_symb_tab(SectionTable table_sect)
 /*	afficher_symboles(char *nom, Symbole *symboles, int nb_symb)
 		Affiche les informations d'une liste de symboles
 */
-void afficher_symboles(char *nom, Symbole *symboles, int nb_symb)
+void afficher_symboles(char *nom, Elf32_Sym *symboles, int nb_symb)
 {
 	printf("\nSymbol table '%s' contains %d entries:\n", nom, nb_symb);
 	printf("   Num:    Value  Size Type    Bind   Vis      Ndx Name\n");
@@ -102,10 +102,10 @@ void afficher_symboles(char *nom, Symbole *symboles, int nb_symb)
 	// Parcours des symboles	
 	for (int i = 0; i < nb_symb; i++)
 	{
-		/*Symbole s = symboles[i];
-		printf("   %3d: %08x %5d %-7s %-6s %-8s %3s %s\n",
-			   i, s.symb.st_value, s.symb.st_size,
-			   s.type, s.bind, s.vis, s.ndx, s.name);*/
+		/*
+		printf("   %3d: %08x %x %x %x %x\n",
+			   i, symboles[i].st_value, symboles[i].st_size,
+			   symboles[i].st_info, symboles[i].st_other, symboles[i].st_shndx);*/
 	}
 }
 
@@ -113,17 +113,17 @@ void afficher_symboles(char *nom, Symbole *symboles, int nb_symb)
 /*	afficher_symboles_table(SymbolesList liste)
 		Affiche les informations de la table des symboles
 */
-void afficher_symboles_table(SymbolesList liste)
+void afficher_symboles_table(SymboleTable table)
 {
 	// Cas des symboles dynamiques
-	if (liste.nb_symbDyn > 0)
+	if (table.nb_symbDyn > 0)
 	{
-		afficher_symboles(".dynsym", liste.symbDynTab, liste.nb_symbDyn);
+		afficher_symboles(".dynsym", table.symbDynTab, liste.nb_symbDyn);
 	}
 	
 	// Cas des autres symboles
-	if (liste.nb_symb > 0)
+	if (table.nb_symb > 0)
 	{
-		afficher_symboles(".symtab", liste.symbTab, liste.nb_symb);
+		afficher_symboles(".symtab", table.symbTab, liste.nb_symb);
 	}	
 }

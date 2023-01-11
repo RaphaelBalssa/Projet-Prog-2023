@@ -24,20 +24,12 @@ typedef struct
 // Structure pour stocker une liste de reimplantation
 typedef struct
 {
-	char name[30];
-	uint32_t offset;
 	int nb_reloc;
 	int type; // 0=rel - 1=rela
 	Rel *relTab;
 	Rela *relaTab;
-} RelocList;
-
-// Structure pour stocker une liste (table) de liste de reimplantation reimplantation
-typedef struct
-{
-	int nb_list;
-	RelocList *tab;
 } RelocTable;
+
 
 /*******************************************************************************
  * lire_reimp_table
