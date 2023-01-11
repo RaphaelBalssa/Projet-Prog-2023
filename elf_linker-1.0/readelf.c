@@ -34,6 +34,7 @@ int main (int argc, char * argv[])
 	char opt;
 	SectionsTable tabSections;
 	tabSections = get_sections(elf, header, big_endian);
+	char s[10];
   	while (opt != 'q')
   	{
   		printf("\n\n\ndisplay header (H) | Display sections(S) | display selcted section (x)| quit (q)\n");
@@ -48,9 +49,20 @@ int main (int argc, char * argv[])
 				case 'S':
 					afficher_sections(elf, header, big_endian, tabSections);
 				 	break;
-				/*case 'x':
-					show_header (header);
-					break;*/
+				case 'x':
+					printf("\n\n\n enter the section you want to display :");
+					y=scanf(" %s", s);
+  					if(y==1)
+  					{
+  						int n_sec = atoi(s);
+  						uint8_t *sectionLue;
+						Section sect;
+						sectionLue = get_section_data(tabSections,s, header, elf);
+						sect = get_section(tabSections, s, header, elf);
+						dumpSection(sectionLue, sect, Swap32(tabSections.sectTab[n_sec].SectionHeader.sh_size), n_sec);
+
+  					}
+					break;
 				default:
 					break;
 			}
@@ -65,7 +77,8 @@ int main (int argc, char * argv[])
 	//uint8_t *sectionLue;
 	//Section sect;
 	//sectionLue = get_section_data(tabSections,"13", header, elf);
-	//sect = get_section(tabSections,"13", header, elf);
+	//sect = get_section(tabSections,s, header, elf);
+	//int n_sec = atoi(s);
 	//dumpSection(sectionLue, sect, Swap32(tabSections.sectTab[13].SectionHeader.sh_size), 13);
 	
 	
