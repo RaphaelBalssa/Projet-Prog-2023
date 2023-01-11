@@ -29,20 +29,44 @@ int main (int argc, char * argv[])
 	fseek(elf, 0, SEEK_SET);
 	
 	//Retrieval of the file header and display of said header on the standard output (the screen)
-	Elf32_Ehdr header = read_header(elf);
 	
-	show_header(header);
+	Elf32_Ehdr header = read_header(elf);
+	char opt;
+	SectionsTable tabSections;
+	tabSections = get_sections(elf, header, big_endian);
+  	while (opt != 'q')
+  	{
+  		printf("\n\n\ndisplay header (H) | Display sections(S) | display selcted section (x)| quit (q)\n");
+  		int y=scanf(" %c", &opt);
+  		if(y==1)
+  		{
+			switch (opt)
+			{
+				case 'H':
+					show_header (header);
+					break;
+				case 'S':
+					afficher_sections(elf, header, big_endian, tabSections);
+				 	break;
+				/*case 'x':
+					show_header (header);
+					break;*/
+				default:
+					break;
+			}
+		}
+	}
+	/*show_header (header);
 	
 	SectionsTable tabSections;
 	tabSections = get_sections(elf, header, big_endian);
-	afficher_sections(elf, header, big_endian, tabSections);
+	afficher_sections(elf, header, big_endian, tabSections);*/
 	
+	//uint8_t * tab = (uint8_t *) malloc (file_size * sizeof(uint8_t));
 	
-	uint8_t *sectionLue;
-	Section sect;
-	sectionLue = get_section_data(tabSections,"12", header, elf);
-	sect = get_section(tabSections,"12", header, elf);
-	dumpSection(sectionLue, sect, tabSections.sectTab[12].SectionHeader.sh_size, 12);
+	//tab = get_section(tabSections,"12", header, elf);
+	
+	//dumpSection(tab, tabSections.sectTab[12].SectionHeader.sh_size, 12);
 	
 	fclose(elf);
 }
