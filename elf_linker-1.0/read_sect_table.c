@@ -162,8 +162,7 @@ SectionsTable get_sections(FILE * elf, Elf32_Ehdr header, int endianess)
 	SectionsTable tab;
 	tab.sectTab = (Section *) malloc (header.e_shnum * sizeof(Section));
 	tab.nb_sect = header.e_shnum;
-	
-	printf("\n\n");
+
 
 	// Deplacement du curseur jusqu'a la table des sections
 	fseek(elf, header.e_shoff, SEEK_SET);

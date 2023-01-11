@@ -34,7 +34,7 @@ int main (int argc, char * argv[])
 	}
 	
 	fseek(elf, 0, SEEK_SET);
-	
+
 	//Retrieval of the file header and display of said header on the standard output (the screen)
 	
 	Elf32_Ehdr header = read_header(elf);
@@ -51,10 +51,10 @@ int main (int argc, char * argv[])
 			afficher_sections(elf, header, big_endian, tabSections);
 			break;
 		case 'x':
-		
 			int nb_section = atoi(argv[3]);
-			if(nb_section < 0 && nb_section > header.e_shnum){
+			if(nb_section < 0 || nb_section > header.e_shnum){
 				printf("Numero de section %d incorrect \n", nb_section);
+				break;
 			} else {
 			
 				uint8_t *sectionLue;

@@ -69,7 +69,7 @@ Section get_section (SectionsTable sections, char * section, Elf32_Ehdr header, 
 	int i = 0;
 	Section section_resultat;
 	
-	printf("\n");
+
 	
 	//Determine if we're searching a section by name or number
 	if (!isdigit(section[i]))
@@ -84,20 +84,22 @@ Section get_section (SectionsTable sections, char * section, Elf32_Ehdr header, 
 		//Convert section number string into integer
 		sectionNb = atoi(section);
 		
-		if (sectionNb < 0 || sectionNb > header.e_shnum)
-		{
+		if (sectionNb < 0 || sectionNb > header.e_shnum) {
 			printf("The specified section does not exist\n");
-		}
-
-		section_address = Swap32(sections.sectTab[sectionNb].SectionHeader.sh_offset);
-		
-		
-		fseek(elf, section_address, SEEK_SET);
-		if(!fread(&section_resultat, 40, 1, elf)){
-			printf("Erreur \n");
+			exit(1);
+			
+		} else {
+			section_address = Swap32(sections.sectTab[sectionNb].SectionHeader.sh_offset);
+			
+			fseek(elf, section_address, SEEK_SET);
+			if(!fread(&section_resultat, 40, 1, elf)){
+				printf("Erreur \n");
+			}
 		}
 		
 	}
+	
+	
 	
 	return section_resultat;
 }
@@ -120,6 +122,8 @@ void dumpSection (uint8_t *contenuSection, Section section, int section_size, in
 				printf(" ");
 			}
 		}
+		
+		printf("\n");	
 		
 	
 		
