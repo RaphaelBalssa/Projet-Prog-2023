@@ -223,7 +223,7 @@ void afficher_sections(FILE * elf, Elf32_Ehdr header, int endianess, SectionsTab
 	printf("  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),\n");
 	printf("  L (link order), O (extra OS processing required), G (group), T (TLS),\n");
 	printf("  C (compressed), x (unknown), o (OS specific), E (exclude),\n");
-	printf("  p (processor specific)\n");
+	printf("  p (processor specific)\n\n");
 
 
 }

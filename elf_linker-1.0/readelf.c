@@ -62,11 +62,14 @@ int main (int argc, char * argv[])
 	tabSections = get_sections(elf, header, big_endian);
 	afficher_sections(elf, header, big_endian, tabSections);*/
 	
-	//uint8_t * tab = (uint8_t *) malloc (file_size * sizeof(uint8_t));
+	//uint8_t *sectionLue;
+	//Section sect;
+	//sectionLue = get_section_data(tabSections,"13", header, elf);
+	//sect = get_section(tabSections,"13", header, elf);
+	//dumpSection(sectionLue, sect, Swap32(tabSections.sectTab[13].SectionHeader.sh_size), 13);
 	
-	//tab = get_section(tabSections,"12", header, elf);
-	
-	//dumpSection(tab, tabSections.sectTab[12].SectionHeader.sh_size, 12);
 	
 	fclose(elf);
 }
+
+
