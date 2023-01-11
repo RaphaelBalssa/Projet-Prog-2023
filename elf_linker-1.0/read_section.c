@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -102,8 +103,8 @@ Section get_section (SectionsTable sections, char * section, Elf32_Ehdr header, 
 }
 
 // Finally, the display function shows us the result of our functions.
-// First we need to show the sh_addr content of the section
-// Then we need to display and move in the uint8_t tab byte by byte BUT IT DOESN'T WORK YET
+// Then we display and move in the uint8_t tab byte by byte 
+
 void dumpSection (uint8_t *contenuSection, Section section, int section_size, int sectionNb) {
 	// Cas ou le contenu de la section est vide
 	if (section_size == 0) {

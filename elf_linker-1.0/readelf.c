@@ -9,9 +9,16 @@
 
 int main (int argc, char * argv[])
 {	
-	if (argc != 2)
+	if (argc < 3)
 	{
-		printf ("Usage: ./readelf <name of file>");
+		printf("Usage: readelf elf-file <option> \n");
+		printf(" Display information about the contents of ELF format files\n");
+		printf(" Options are : \n");
+		printf("  -h : Display the ELF file header\n");
+		printf("  -S : Display the sections' header\n");
+		printf("  -s : Display the symbol table\n");
+		printf("  -r : Display the relocations (if present)\n");
+		printf("  -x : Dump the contents of section <number|name> as bytes\n");
 		return -1;
 	}
 	
@@ -31,57 +38,40 @@ int main (int argc, char * argv[])
 	//Retrieval of the file header and display of said header on the standard output (the screen)
 	
 	Elf32_Ehdr header = read_header(elf);
-	char opt;
 	SectionsTable tabSections;
 	tabSections = get_sections(elf, header, big_endian);
-	char s[10];
-  	while (opt != 'q')
-  	{
-  		printf("\n\n\ndisplay header (H) | Display sections(S) | display selcted section (x)| quit (q)\n");
-  		int y=scanf(" %c", &opt);
-  		if(y==1)
-  		{
-			switch (opt)
-			{
-				case 'H':
-					show_header (header);
-					break;
-				case 'S':
-					afficher_sections(elf, header, big_endian, tabSections);
-				 	break;
-				case 'x':
-					printf("\n\n\n enter the section you want to display :");
-					y=scanf(" %s", s);
-  					if(y==1)
-  					{
-  						int n_sec = atoi(s);
-  						uint8_t *sectionLue;
-						Section sect;
-						sectionLue = get_section_data(tabSections,s, header, elf);
-						sect = get_section(tabSections, s, header, elf);
-						dumpSection(sectionLue, sect, Swap32(tabSections.sectTab[n_sec].SectionHeader.sh_size), n_sec);
-
-  					}
-					break;
-				default:
-					break;
+	
+	switch(argv[2][1]){
+		case 'H':
+		
+			show_header (header);
+			break;
+		case 'S':
+		
+			afficher_sections(elf, header, big_endian, tabSections);
+			break;
+		case 'x':
+		
+			int nb_section = atoi(argv[3]);
+			if(nb_section < 0 && nb_section > header.e_shnum){
+				printf("Numero de section %d incorrect \n", nb_section);
+			} else {
+			
+				uint8_t *sectionLue;
+				Section sect;
+				sectionLue = get_section_data(tabSections,argv[3], header, elf);
+				sect = get_section(tabSections,argv[3], header, elf);
+				dumpSection(sectionLue, sect, Swap32(tabSections.sectTab[nb_section].SectionHeader.sh_size), nb_section);
+			
 			}
-		}
+			
+			break;
+				
+		default:
+		
+			printf("Argument incorrect, veuillez recommencer \n");
+			break;
 	}
-	/*show_header (header);
-	
-	SectionsTable tabSections;
-	tabSections = get_sections(elf, header, big_endian);
-	afficher_sections(elf, header, big_endian, tabSections);*/
-	
-	//uint8_t *sectionLue;
-	//Section sect;
-	//sectionLue = get_section_data(tabSections,"13", header, elf);
-	//sect = get_section(tabSections,s, header, elf);
-	//int n_sec = atoi(s);
-	//dumpSection(sectionLue, sect, Swap32(tabSections.sectTab[13].SectionHeader.sh_size), 13);
-	
-	
 	fclose(elf);
 }
 
